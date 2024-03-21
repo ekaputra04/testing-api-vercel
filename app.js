@@ -23,3 +23,7 @@ app.post("/books", addBooks);
 app.listen(8000, () => {
   console.log("Aplikasi Berjalan Di Port 8000");
 });
+
+app.get("/", (req, res) => {
+  res.send("Server is Running");
+});
