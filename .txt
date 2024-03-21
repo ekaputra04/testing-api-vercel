@@ -1,0 +1,3 @@
+mongodb+srv://ekaputrajuniawan2:kB1c5m2NZLeKkYYW@mymongodb.jtzvnhx.mongodb.net/mymongodb?retryWrites=true&w=majority&appName=mymongodb
+
+DB_URI=mongodb+srv://ekaputrajuniawan:ZzeZdFdvn1YSByij@cluster0.h6qwnve.mongodb.net/testing-deploy-node-mongodb-vercel?retryWrites=true&w=majority&appName=Cluster0

@@ -9,9 +9,7 @@ app.use(cors());
 
 async function connectToDatabase() {
   try {
-    await mongoose.connect(process.env.DB_URI, {
-      connectTimeoutMS: 5000, // Atur timeout koneksi
-    });
+    await mongoose.connect(process.env.DB_URI);
     console.log("Berhasil connect ke database");
   } catch (error) {
     console.error("Gagal connect ke database:", error);
@@ -26,7 +24,7 @@ const { getAllBook, addBooks } = require("./controllers/books");
 app.get("/books", getAllBook);
 app.post("/books", addBooks);
 
-const PORT = process.env.PORT || 8000; // Menggunakan port yang disediakan oleh platform hosting atau 8000 jika tidak tersedia
+const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, () => {
   console.log(`Aplikasi Berjalan Di Port ${PORT}`);
