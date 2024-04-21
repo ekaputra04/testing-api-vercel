@@ -7,6 +7,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Membuat konfigurasi untuk menyimpan kunci API yang valid
+const validAPIKeys = new Set(process.env.VALID_API_KEYS.split(","));
+
 async function connectToDatabase() {
   try {
     await mongoose.connect(process.env.DB_URI);
@@ -20,14 +23,27 @@ async function connectToDatabase() {
 connectToDatabase();
 
 const {
-  getAllBook,
+  getAllBooks,
   getBook,
   addBooks,
   editBooks,
   deleteBooks,
 } = require("./controllers/books");
 
-app.get("/books", getAllBook);
+// Middleware untuk memeriksa kunci API
+function checkAPIKey(req, res, next) {
+  const apiKey = req.headers["x-api-key"];
+  if (!apiKey || !validAPIKeys.has(apiKey)) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  next();
+}
+
+// Menggunakan middleware untuk memeriksa kunci API untuk semua rute /books
+app.use("/books", checkAPIKey);
+
+// Routes
+app.get("/books", getAllBooks);
 app.get("/books/:id", getBook);
 app.post("/books", addBooks);
 app.put("/books/:id", editBooks);
