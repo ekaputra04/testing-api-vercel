@@ -19,14 +19,6 @@ const bookSchema = new mongoose.Schema({
   },
   kategori: {
     type: String,
-    enum: [
-      "Fiksi",
-      "Nonfiksi",
-      "Pendidikan",
-      "Anak-anak",
-      "Pengembangan Diri",
-      "Seni dan Desain",
-    ],
     required: true,
   },
   harga: {

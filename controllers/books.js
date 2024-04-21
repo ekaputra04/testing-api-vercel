@@ -23,34 +23,74 @@ const getBook = async (req, res) => {
 
 const addBooks = async (req, res) => {
   try {
-    const { judul, penulis, penerbit, tahuntbt, kategori, harga, stok } =
-      req.body;
+    const booksToAdd = req.body.data;
 
-    if (harga <= 0) {
-      return res
-        .status(400)
-        .json({ message: "Harga buku tidak boleh kurang atau sama dengan 0" });
+    if (!booksToAdd) {
+      return res.status(400).json({ message: "Data buku tidak valid" });
     }
 
-    if (stok < 0) {
+    if (!Array.isArray(booksToAdd)) {
+      // Jika hanya satu buku yang dimasukkan, langsung tambahkan tanpa iterasi
+      const {
+        judul,
+        penulis,
+        penerbit,
+        tahuntbt,
+        kategori,
+        harga,
+        stok,
+        jmlbeli,
+      } = booksToAdd;
+
+      if (harga <= 0 || stok < 0) {
+        return res
+          .status(400)
+          .json({ message: "Harga atau stok buku tidak valid" });
+      }
+
+      await Book.create({
+        judul,
+        penulis,
+        penerbit,
+        tahuntbt,
+        kategori,
+        harga,
+        stok,
+        jmlbeli,
+      });
+
       return res
-        .status(400)
-        .json({ message: "Stok buku tidak boleh kurang dari 0" });
+        .status(200)
+        .json({ message: "Berhasil menambah buku", data: booksToAdd });
+    } else if (booksToAdd.length === 0) {
+      return res.status(400).json({ message: "Data buku tidak valid" });
     }
 
-    await Book.create({
-      judul,
-      penulis,
-      penerbit,
-      tahuntbt,
-      kategori,
-      harga,
-      stok,
-    });
+    // Jika lebih dari satu buku dimasukkan, lakukan iterasi seperti sebelumnya
+    for (let i = 0; i < booksToAdd.length; i++) {
+      const { judul, penulis, penerbit, tahuntbt, kategori, harga, stok } =
+        booksToAdd[i];
+
+      if (harga <= 0 || stok < 0) {
+        return res
+          .status(400)
+          .json({ message: "Harga atau stok buku tidak valid" });
+      }
+
+      await Book.create({
+        judul,
+        penulis,
+        penerbit,
+        tahuntbt,
+        kategori,
+        harga,
+        stok,
+      });
+    }
 
     return res
       .status(200)
-      .json({ message: "berhasil menambah buku", data: req.body });
+      .json({ message: "Berhasil menambah buku", data: booksToAdd });
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ message: error.message });
