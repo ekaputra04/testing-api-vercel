@@ -13,16 +13,25 @@ async function connectToDatabase() {
     console.log("Berhasil connect ke database");
   } catch (error) {
     console.error("Gagal connect ke database:", error);
-    process.exit(1); // Keluar dari proses jika gagal terhubung ke database
+    process.exit(1);
   }
 }
 
 connectToDatabase();
 
-const { getAllBook, addBooks } = require("./controllers/books");
+const {
+  getAllBook,
+  getBook,
+  addBooks,
+  editBooks,
+  deleteBooks,
+} = require("./controllers/books");
 
 app.get("/books", getAllBook);
+app.get("/books/:id", getBook);
 app.post("/books", addBooks);
+app.put("/books/:id", editBooks);
+app.delete("/books/:id", deleteBooks);
 
 const PORT = process.env.PORT || 8000;
 
